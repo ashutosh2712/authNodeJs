@@ -1,8 +1,94 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+ 
+  font-family:  "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.formContainer{
+  margin-top: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+input{
+  padding: 0.35rem;
+  border-radius: 0.25rem;
+  outline: none;
+}
+
+input:hover{
+  box-shadow: 0 0 0 5px solid dodgerblue;
+}
+
+.registerContainer{
+  margin-top: 25vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.btn{
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  background:dodgerblue;
+  color: #fff;
+  border: none;
+}
+
+.btn:hover {
+  background: green;
+  padding: 0.8rem;
+  cursor: pointer;
+}
+
+.emailField, .passwordField {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.navContainer{
+  display: flex;
+  justify-content: space-between;
+  background: #00B7FF;
+  height: 100%;
+}
+
+.authSide{
+  margin: 1rem;
+}
+
+.btn-primary{
+  background: green;
+}
+
+.btn-primary:hover{
+  background: red;
+}
+
+.homeSide{
+  display: flex;
+  align-items: center;
+  margin: 1rem 0rem 0.5rem 1rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.midSide{
+  display: flex;
+  gap: 1rem;
+  margin: 1rem;
+}
+
+.btn-secondary{
+  background: green;
 }

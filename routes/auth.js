@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+var dotenv = require('dotenv')
+dotenv.config()
+// Define route to render registration page
+router.get('/register', (req, res) => {
+    res.render('register');
+});
 
 //registration
 router.post('/register', async(req,res) => {
@@ -11,12 +17,18 @@ router.post('/register', async(req,res) => {
         const hashedPassword = await bcrypt.hash(password,10);
         const user = new User({email, password:hashedPassword});
         await user.save();
-        res.status(201).json({message: 'User registered successfully '});
+        res.redirect('/home');
+
+
     }catch(error) {
         res.status(500).json({error: 'Registration failed'})
     }
     
 })
+
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 
 
 //login
@@ -31,10 +43,13 @@ router.post('/login', async(req,res) => {
         if(!passwordMatch) {
             return res.status(401).json({error: 'Wrong Password!'});
         }
-        const token = jwt.sign({userId:user._id}, 'your-secret-key',{
+        const token = jwt.sign({userId:user._id}, `${process.env.SESSION_SECRET}`,{
             expiresIn: '100h',
         });
-        res.status(200).json({token});
+        // Store token in session
+        req.session.token = token;
+        console.log(req.session.token);
+        res.status(200).redirect('/home');
     }catch(error) {
         res.status(500).json({error: 'Login Failed'})
     }

@@ -5,11 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
 var authRouter = require('./routes/auth')
+var homeRouter = require('./routes/home')
 var dotenv = require('dotenv')
 const { default: mongoose } = require('mongoose');
-
+const session = require('express-session');
 var app = express();
 dotenv.config()
 
@@ -18,9 +19,19 @@ mongoose.connect(`mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASSWOR
 .then(() => console.log("MongoDb Connection successfull!"))
 .catch((err) => {console.log(err)})
 
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+
+app.use(session({
+    secret: `${process.env.SESSION_SECRET}`,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -29,8 +40,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 app.use('/auth', authRouter);
+app.use('/home', homeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
