@@ -8,7 +8,13 @@
             <input type="search" placeholder="Search.."/>
             <button class="btn btn-secondary">Search</button>
         </div>
-        <div class="authSide"><button class="btn btn-primary">Logout</button></div>
+        <div class="authSide">
+            <form action="/auth/logout" method="post">
+                <button class="btn btn-primary">
+                    Logout
+                </button>
+            </form>
+        </div>
     </nav>
     <h1>Wellcome logedin user</h1>
 </div>

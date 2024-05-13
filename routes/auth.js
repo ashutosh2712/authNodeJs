@@ -53,6 +53,22 @@ router.post('/login', async(req,res) => {
     }catch(error) {
         res.status(500).json({error: 'Login Failed'})
     }
+});
+
+router.post('/logout',(req,res) =>{
+    try{
+        req.session.destroy((err) =>{
+            if(err) {
+                console.error('Error destroying session:', err);
+                res.status(500).json({error: 'Logout failed'});
+            }else{
+                res.status(200).redirect('/auth/login');
+            }
+        });
+    } catch(error) {
+        console.error('Logout error:', error);
+        res.status(500).json({error: 'Logout failed'});
+    }
 })
 
 
