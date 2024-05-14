@@ -4,6 +4,8 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 var dotenv = require('dotenv')
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('passport');
 dotenv.config()
 // Define route to render registration page
 router.get('/register', (req, res) => {
@@ -55,6 +57,8 @@ router.post('/login', async(req,res) => {
     }
 });
 
+
+//logout
 router.post('/logout',(req,res) =>{
     try{
         req.session.destroy((err) =>{
@@ -71,5 +75,62 @@ router.post('/logout',(req,res) =>{
     }
 })
 
+//Authentication using Google Account
+router.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }),
+function(req, res) {
+  // Successful authentication, redirect home.
+  res.redirect('/home');
+})
+
+router.get('/google/callback', passport.authenticate('google',{
+    failureRedirect: '/auth/register',
+    successRedirect:'/home'
+}))
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // Retrieve user information from the Google profile
+    const { id, displayName, emails } = profile;
+    // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    //   return cb(err, user);
+    // });
+    User.findOne({ googleId: id })
+    .then(existingUser => {
+        if (existingUser) {
+            return done(null, existingUser);
+        } else {
+            const newUser = new User({
+                googleId: id,
+                googleDisplayName: displayName,
+                googleEmail: emails[0].value
+            });
+
+            newUser.save()
+                .then(savedUser => {
+                    return done(null, savedUser);
+                })
+                .catch(err => {
+                    return done(err);
+                });
+        }
+    })
+    .catch(err => {
+        return done(err);
+    });
+}));
+
+passport.serializeUser((user, done) =>{
+    done(null,user.id)
+})
+
+passport.deserializeUser((id,done) =>{
+    User.findById(id,(err,user) =>{
+        done(err,user);
+    });
+});
 
 module.exports = router;

@@ -94,3 +94,7 @@ input:hover{
 .btn-secondary{
   background: green;
 }
+
+.regLogToggle{
+  margin-top: 1rem;
+}
