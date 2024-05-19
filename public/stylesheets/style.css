@@ -98,3 +98,34 @@ input:hover{
 .regLogToggle{
   margin-top: 1rem;
 }
+
+
+.signInGoogle{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding:0.1rem 1.2rem;
+  background: #fff;
+  margin-top: 1rem;
+  border-radius: 1rem;
+}
+
+.signInGoogle:hover{
+  background: #d9ebf3;
+}
+.googleLink{
+  text-decoration: none;
+}
+.googleImg{
+  width: 24px;
+  height: 24px;
+}
+
+.userUpdate{
+  margin-left: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: max-content;
+}

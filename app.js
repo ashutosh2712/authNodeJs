@@ -1,17 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var indexRouter = require('./routes/index');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const indexRouter = require('./routes/index');
 
-var authRouter = require('./routes/auth')
-var homeRouter = require('./routes/home')
-var dotenv = require('dotenv')
+const authRouter = require('./routes/auth')
+const homeRouter = require('./routes/home')
+const profileRouter = require('./routes/users')
+const dotenv = require('dotenv')
 const passport = require('passport')
 const { default: mongoose } = require('mongoose');
 const session = require('express-session');
-var app = express();
+const app = express();
 dotenv.config()
 app.use(session({
     secret: `${process.env.SESSION_SECRET}`,
@@ -46,7 +47,7 @@ app.use('/', indexRouter);
 
 app.use('/auth', authRouter);
 app.use('/home', homeRouter);
-
+app.use('/profile',profileRouter);
 
 // Initialize Passport
 
