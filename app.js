@@ -3,16 +3,25 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var indexRouter = require('./routes/index');
 
 var authRouter = require('./routes/auth')
 var homeRouter = require('./routes/home')
 var dotenv = require('dotenv')
+const passport = require('passport')
 const { default: mongoose } = require('mongoose');
 const session = require('express-session');
 var app = express();
 dotenv.config()
+app.use(session({
+    secret: `${process.env.SESSION_SECRET}`,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session())
 
 //DB Connection
 mongoose.connect(`mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASSWORD}@cluster0.0hb5vku.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
@@ -26,12 +35,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 
-app.use(session({
-    secret: `${process.env.SESSION_SECRET}`,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false } // Set to true if using HTTPS
-}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -43,6 +46,9 @@ app.use('/', indexRouter);
 
 app.use('/auth', authRouter);
 app.use('/home', homeRouter);
+
+
+// Initialize Passport
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

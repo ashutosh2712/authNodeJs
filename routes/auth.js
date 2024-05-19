@@ -73,14 +73,14 @@ router.post('/logout',(req,res) =>{
         console.error('Logout error:', error);
         res.status(500).json({error: 'Logout failed'});
     }
+    // req.logout()
+    // res.redirect('/auth/login')
 })
 
 //Authentication using Google Account
-router.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }),
-function(req, res) {
-  // Successful authentication, redirect home.
-  res.redirect('/home');
-})
+router.get('/google',
+passport.authenticate('google', { scope: ['profile', 'email'] })
+)
 
 router.get('/google/callback', passport.authenticate('google',{
     failureRedirect: '/auth/register',
@@ -101,6 +101,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ googleId: id })
     .then(existingUser => {
         if (existingUser) {
+            // console.log("User_exist:", existingUser)
             return done(null, existingUser);
         } else {
             const newUser = new User({
@@ -124,13 +125,16 @@ passport.use(new GoogleStrategy({
 }));
 
 passport.serializeUser((user, done) =>{
-    done(null,user.id)
+    done(null,user)
 })
 
-passport.deserializeUser((id,done) =>{
-    User.findById(id,(err,user) =>{
-        done(err,user);
-    });
-});
+passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findById(id).exec();
+      done(null, user);
+    } catch (err) {
+      done(err);
+    }
+  });
 
 module.exports = router;
