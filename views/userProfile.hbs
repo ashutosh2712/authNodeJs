@@ -1,24 +1,24 @@
 <div class="profileContainer">
-    <h2>My Profile</h2>
-    <form action="" class="userUpdate">
-        <label for="html">User Name</label>
-        <input type="text">
-        <label for="html">User Email</label>
-        <input type="email">
-        <label for="html">User Password</label>
-        <input type="password">
-        <label for="html">User Bio</label>
-       <textarea name="bio" id="bio" placeholder="Write something"></textarea>
-        <label for="html">User Phone</label>
-        <input type="text" name="phone" id="phone">
-        <label for="html">User photo</label>
-        <input type="file" name="photo" id="photo">
-        <label for="html">Profile Type</label>
-        <label for="html"><input type="checkbox" name="" id="">Private</label>
-        
-        <label for="html"><input type="checkbox" name="" id="">Public</label>
+  <h2>My Profile</h2>
+  <form action="/profile" method="post" class="userUpdate">
+    <label for="html">User Name</label>
+    <input type="text" value="{{user.name}}" />
+    <label for="html">User Email</label>
+    <input type="email" name="email" value="{{user.email}}" />
+    <label for="html">User Password</label>
+    <input type="password" />
+    <label for="html">User Bio</label>
+    <textarea
+      name="bio"
+      id="bio"
+      placeholder="Write something"
+    >{{user.bio}}</textarea>
+    <label for="html">User Phone</label>
+    <input type="text" name="phone" id="phone" value="{{user.phone}}" />
+    <label for="html">User photo</label>
+    <input type="file" name="photo" id="photo" value="{{user.photo}}" />
+       <label for="isPrivate"><input type="checkbox" id="isPrivate" name="isPrivate" {{#if user.isPrivate}}checked{{/if}}>Make account private</label>
+    <button type="submit" class="btn">Save Changes</button>
 
-        <button type="submit" class="btn">Save Changes</button>
-        
-    </form>
+  </form>
 </div>
